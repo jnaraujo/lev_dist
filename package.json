@@ -1,0 +1,11 @@
+{
+  "name": "lev_dist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jônatas Araújo <jonatasaraujo2257@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test main.js"
+  }
+}
