@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
+import jsLevenshtein from './js-levenshtein.js';
 
 
 /**
@@ -58,6 +59,8 @@ function lev_it(a, b) {
   return arr[m][n];
 }
 
+
+
 test("lev benchmark", () => {
   const n = 10000;
   for (let i = 0; i < n; i++) {
@@ -73,5 +76,14 @@ test("lev_it benchmark", () => {
     assert.strictEqual(lev_it('kitten', 'sitting'), 3);
     assert.strictEqual(lev_it('saturday', 'sunday'), 3);
     assert.strictEqual(lev_it('sittin', 'sitting'), 1);
+  }
+})
+
+test("js-levenshtein benchmark", () => {
+  const n = 10000;
+  for (let i = 0; i < n; i++) {
+    assert.strictEqual(jsLevenshtein('kitten', 'sitting'), 3);
+    assert.strictEqual(jsLevenshtein('saturday', 'sunday'), 3);
+    assert.strictEqual(jsLevenshtein('sittin', 'sitting'), 1);
   }
 })
