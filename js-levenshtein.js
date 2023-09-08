@@ -25,6 +25,14 @@ export default function (a, b) {
   var la = a.length;
   var lb = b.length;
 
+  if (la === 0) {
+    return lb;
+  }
+
+  if (lb === 0) {
+    return la;
+  }
+
   while (la > 0 && (a.charCodeAt(la - 1) === b.charCodeAt(lb - 1))) {
     la--;
     lb--;
@@ -57,11 +65,13 @@ export default function (a, b) {
   var bx2;
   var bx3;
 
-  var vector = [];
-
+  var vector = Array(la * 2)
+  
+  let i = 0;
   for (y = 0; y < la; y++) {
-    vector.push(y + 1);
-    vector.push(a.charCodeAt(offset + y));
+    vector[i] = y + 1
+    vector[i + 1] = a.charCodeAt(offset + y);
+    i += 2;
   }
 
   var len = vector.length - 1;

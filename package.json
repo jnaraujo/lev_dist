@@ -6,7 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "node --test main.js",
-    "start": "node main.js"
+    "test": "node --test test.js",
+    "start": "node main.js",
+    "bench": "node main.js --benchmark"
   }
 }

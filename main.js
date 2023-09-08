@@ -1,5 +1,5 @@
-import { test } from 'node:test';
-import assert from 'node:assert';
+
+import { time } from './utils.js';
 import jsLevenshtein from './js-levenshtein.js';
 
 
@@ -8,7 +8,7 @@ import jsLevenshtein from './js-levenshtein.js';
  * @param {string} a 
  * @param {string} b 
  */
-function lev(a, b) {
+export function lev(a, b) {
   const m = a.length;
   const n = b.length;
 
@@ -29,12 +29,21 @@ function lev(a, b) {
  * @param {string} a 
  * @param {string} b 
  */
-function lev_it(a, b) {
+export function lev_it(a, b) {
+  if(a === b) return 0;
+  
   const m = a.length;
   const n = b.length;
 
-  const arr = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+  if (m === 0) return n;
+  if (n === 0) return m;
+  
 
+  const arr = Array(m + 1);
+  for (let i = 0; i <= m; i++) {
+    arr[i] = Array(n + 1);
+  }
+  
   for (let i = 0; i <= m; i++) arr[i][0] = i;
   for (let j = 0; j <= n; j++) arr[0][j] = j;
 
@@ -42,7 +51,7 @@ function lev_it(a, b) {
 
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
-      if(a[i - 1] === b[j - 1]){
+      if (a.charCodeAt(i - 1) === b.charCodeAt(j - 1)) {
         cost = 0;
       } else {
         cost = 1;
@@ -59,31 +68,33 @@ function lev_it(a, b) {
   return arr[m][n];
 }
 
+function benchmark() {
+  const n = 100000;
 
+  // takes too long
+  // time(() => {
+  //   lev('kitten', 'sitting');
+  //   lev('saturday', 'sunday');
+  //   lev('sittin', 'sitting');
+  //   lev('abacate', 'abacate');
+  //   lev('abacate', 'dauoishduiahsuidh');
+  // }, n, 'lev')
 
-test("lev benchmark", () => {
-  const n = 10000;
-  for (let i = 0; i < n; i++) {
-    assert.strictEqual(lev('kitten', 'sitting'), 3);
-    assert.strictEqual(lev('saturday', 'sunday'), 3);
-    assert.strictEqual(lev('sittin', 'sitting'), 1);
-  }
-})
+  time(() => {
+    lev_it('kitten', 'sitting');
+    lev_it('saturday', 'sunday');
+    lev_it('sittin', 'sitting');
+    lev_it('abacate', 'abacate');
+    lev_it('abacate', 'dauoishduiahsuidh');
+  }, n, 'lev_it')
 
-test("lev_it benchmark", () => {
-  const n = 10000;
-  for (let i = 0; i < n; i++) {
-    assert.strictEqual(lev_it('kitten', 'sitting'), 3);
-    assert.strictEqual(lev_it('saturday', 'sunday'), 3);
-    assert.strictEqual(lev_it('sittin', 'sitting'), 1);
-  }
-})
+  time(() => {
+    jsLevenshtein('kitten', 'sitting');
+    jsLevenshtein('saturday', 'sunday');
+    jsLevenshtein('sittin', 'sitting');
+    jsLevenshtein('abacate', 'abacate');
+    jsLevenshtein('abacate', 'dauoishduiahsuidh');
+  }, n, 'js-levenshtein')
+}
 
-test("js-levenshtein benchmark", () => {
-  const n = 10000;
-  for (let i = 0; i < n; i++) {
-    assert.strictEqual(jsLevenshtein('kitten', 'sitting'), 3);
-    assert.strictEqual(jsLevenshtein('saturday', 'sunday'), 3);
-    assert.strictEqual(jsLevenshtein('sittin', 'sitting'), 1);
-  }
-})
+if(process.argv[2] === '--benchmark') benchmark();
