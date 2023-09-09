@@ -9,5 +9,9 @@
     "test": "node --test test.js",
     "start": "node main.js",
     "bench": "node main.js --benchmark"
+  },
+  "dependencies": {
+    "fast-levenshtein": "^3.0.0",
+    "fastest-levenshtein": "^1.0.16"
   }
 }

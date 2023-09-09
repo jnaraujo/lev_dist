@@ -1,6 +1,8 @@
 
 import { time } from './utils.js';
 import jsLevenshtein from './js-levenshtein.js';
+import fastLevenshtein from 'fast-levenshtein';
+import { distance } from "fastest-levenshtein"
 
 
 /**
@@ -71,30 +73,51 @@ export function lev_it(a, b) {
 function benchmark() {
   const n = 100000;
 
-  // takes too long
-  // time(() => {
-  //   lev('kitten', 'sitting');
-  //   lev('saturday', 'sunday');
-  //   lev('sittin', 'sitting');
-  //   lev('abacate', 'abacate');
-  //   lev('abacate', 'dauoishduiahsuidh');
-  // }, n, 'lev')
+  const testCases = [
+    [
+      'kitten', 'sitting'
+    ],
+    [
+      'saturday', 'sunday'
+    ],
+    [
+      'sittin', 'sitting'
+    ],
+    [
+      'abacate', 'abacate'
+    ],
+    [
+      'abacate', 'dauoishduiahsuidh'
+    ],
+    [
+      'a', 'b'
+    ],
+    [
+      'a', 'a'
+    ],
+    [
+      "", ""
+    ],
+    [
+      "dasudihasuidh9812ue97h97adhas9hd973hd", "d98as98dhjaouisdjn893289dhja9sjnda7gsdiyuasd"
+    ]
+  ]
 
   time(() => {
-    lev_it('kitten', 'sitting');
-    lev_it('saturday', 'sunday');
-    lev_it('sittin', 'sitting');
-    lev_it('abacate', 'abacate');
-    lev_it('abacate', 'dauoishduiahsuidh');
+    testCases.forEach(([a, b]) => lev_it(a, b));
   }, n, 'lev_it')
 
   time(() => {
-    jsLevenshtein('kitten', 'sitting');
-    jsLevenshtein('saturday', 'sunday');
-    jsLevenshtein('sittin', 'sitting');
-    jsLevenshtein('abacate', 'abacate');
-    jsLevenshtein('abacate', 'dauoishduiahsuidh');
+    testCases.forEach(([a, b]) => jsLevenshtein(a, b));
   }, n, 'js-levenshtein')
+
+  time(() => {
+    testCases.forEach(([a, b]) => fastLevenshtein.get(a, b));
+  }, n, 'fastLevenshtein')
+
+  time(() => {
+    testCases.forEach(([a, b]) => distance(a, b));
+  }, n, 'fastest Levenshtein')
 }
 
 if(process.argv[2] === '--benchmark') benchmark();
